@@ -10,6 +10,17 @@
     'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
+  /* 炫酷质感主题 - Cinema Dark + 玻璃高光 */
+  --color-surface-deep: #0a0a0f;
+  --color-surface-elevated: #12121a;
+  --color-surface-glass: rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-glow: rgba(255, 255, 255, 0.18);
+  --color-accent-cta: #e11d48;
+  --color-accent-glow: rgba(225, 29, 72, 0.35);
+  --color-text-primary: #f8fafc;
+  --color-text-muted: #94a3b8;
+
   /* Primary Colors */
   --color-primary-50: #f0f9ff;
   --color-primary-100: #e0f2fe;
@@ -152,26 +163,26 @@ body {
   color: rgb(var(--foreground-rgb));
 }
 
-/* Enhanced Neon text effect for brand */
+/* Enhanced Neon text effect for brand - 青绿赛博风 */
 .neon-text {
   position: relative;
   background: linear-gradient(
     45deg,
-    #8b5cf6 0%,
-    #a78bfa 25%,
-    #c084fc 50%,
-    #f0abfc 75%,
-    #fbbf24 100%
+    #22c55e 0%,   /* emerald-500 */
+    #2dd4bf 25%,  /* teal-400 */
+    #0ea5e9 55%,  /* cyan-500 */
+    #22c55e 80%,
+    #a3e635 100%  /* lime-400 */
   );
   background-size: 300% 300%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   text-shadow:
-    0 0 5px rgba(139, 92, 246, 0.5),
-    0 0 10px rgba(167, 139, 250, 0.4),
-    0 0 15px rgba(192, 132, 252, 0.3),
-    0 0 20px rgba(240, 171, 252, 0.2);
+    0 0 6px rgba(34, 197, 94, 0.6),
+    0 0 14px rgba(34, 197, 94, 0.45),
+    0 0 22px rgba(14, 165, 233, 0.35),
+    0 0 30px rgba(45, 212, 191, 0.25);
   animation: neonGradientShift 4s ease-in-out infinite;
 }
 
@@ -186,15 +197,15 @@ body {
   }
 }
 
-/* New DecoTV Brand Style */
+/* JW-TV Brand Style - 青绿赛博渐变 */
 .deco-brand {
   background: linear-gradient(
     135deg,
-    #3b82f6 0%,
-    #8b5cf6 25%,
-    #d946ef 50%,
-    #f43f5e 75%,
-    #f59e0b 100%
+    #22c55e 0%,
+    #16a34a 18%,
+    #0ea5e9 45%,
+    #14b8a6 70%,
+    #a3e635 100%
   );
   background-size: 300% 300%;
   -webkit-background-clip: text;
@@ -216,18 +227,49 @@ body {
   }
 }
 
-/* Glass chip */
+/* 炫酷玻璃芯片 - 高质感毛玻璃 + 内高光 */
 .glass-chip {
   background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.15)
+    165deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.12) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 24px -4px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+.dark .glass-chip {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 32px -8px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.glass-chip:hover {
+  border-color: rgba(255, 255, 255, 0.28);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 10px 30px -15px rgba(99, 102, 241, 0.5);
-  backdrop-filter: blur(16px);
+    0 8px 28px -4px rgba(99, 102, 241, 0.4),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+.dark .glass-chip:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 12px 40px -8px rgba(0, 0, 0, 0.6),
+    0 0 24px -8px rgba(99, 102, 241, 0.25);
 }
 
 /* Chip subtle glow animation */
@@ -369,21 +411,21 @@ body {
   0%,
   100% {
     box-shadow:
-      0 20px 40px -15px rgba(139, 92, 246, 0.1),
+      0 20px 40px -15px rgba(34, 197, 94, 0.12),
       0 0 0 1px rgba(255, 255, 255, 0.1);
   }
   50% {
     box-shadow:
-      0 20px 40px -15px rgba(139, 92, 246, 0.2),
+      0 20px 40px -15px rgba(34, 197, 94, 0.22),
       0 0 0 1px rgba(255, 255, 255, 0.2),
-      0 0 20px rgba(139, 92, 246, 0.1);
+      0 0 22px rgba(14, 165, 233, 0.18);
   }
 }
 
 .login-bg {
   background: radial-gradient(
     ellipse at center,
-    rgba(139, 92, 246, 0.1) 0%,
+    rgba(16, 185, 129, 0.18) 0%,
     transparent 70%
   );
 }
@@ -405,16 +447,66 @@ body {
   animation: floatSlower 10s linear infinite;
 }
 
+/* 炫酷登录卡片 - 毛玻璃 + 内高光 + 微光晕 */
 .login-card {
-  animation: cardGlow 4s ease-in-out infinite;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.5) 100%
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 24px 48px -12px rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  animation: cardGlow 5s ease-in-out infinite;
+}
+.dark .login-card {
+  background: linear-gradient(
+    165deg,
+    rgba(24, 24, 31, 0.9) 0%,
+    rgba(18, 18, 26, 0.85) 50%,
+    rgba(12, 12, 18, 0.8) 100%
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 24px 56px -12px rgba(0, 0, 0, 0.5),
+    0 0 32px -8px rgba(34, 197, 94, 0.22),
+    0 0 0 1px rgba(0, 0, 0, 0.2) !important;
+}
+.login-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 28px 56px -12px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+}
+.dark .login-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 28px 64px -12px rgba(0, 0, 0, 0.55),
+    0 0 40px -8px rgba(34, 197, 94, 0.3),
+    0 0 0 1px rgba(0, 0, 0, 0.2) !important;
 }
 
+/* 炫酷登录按钮 - 渐变 + 高光扫过 + 微光晕 */
 .login-button {
   position: relative;
   overflow: hidden;
+  box-shadow:
+    0 4px 14px -2px rgba(34, 197, 94, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
 }
-
+.login-button:hover:not(:disabled) {
+  box-shadow:
+    0 6px 20px -2px rgba(34, 197, 94, 0.55),
+    0 0 24px -4px rgba(14, 165, 233, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
 .login-button::before {
   content: '';
   position: absolute;
@@ -425,12 +517,11 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.25),
     transparent
   );
-  transition: left 0.5s;
+  transition: left 0.5s ease;
 }
-
 .login-button:hover::before {
   left: 100%;
 }
@@ -550,20 +641,20 @@ body {
   );
 }
 
-/* 剧集：紫蓝霓虹 */
+/* 剧集：青蓝霓虹 */
 .chip-tv {
   background: linear-gradient(
     90deg,
-    rgba(168, 85, 247, 0.35),
-    rgba(59, 130, 246, 0.35)
+    rgba(34, 197, 94, 0.35),
+    rgba(14, 165, 233, 0.35)
   );
-  border-color: rgba(168, 85, 247, 0.45);
+  border-color: rgba(34, 197, 94, 0.5);
 }
 .chip-tv::before {
   background: radial-gradient(
     70% 70% at 50% 50%,
-    rgba(59, 130, 246, 0.45),
-    rgba(168, 85, 247, 0.45) 60%,
+    rgba(14, 165, 233, 0.5),
+    rgba(34, 197, 94, 0.5) 60%,
     transparent 85%
   );
 }
@@ -672,7 +763,7 @@ body {
   color: #f59e0b;
 }
 .mb-tv {
-  color: #a855f7;
+  color: #22c55e;
 }
 .mb-anime {
   color: #10b981;
@@ -710,17 +801,31 @@ body {
   animation: superFadeSlide 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
+/* 炫酷质感：亮色模式 - 柔和渐变 + 微光 */
 html:not(.dark) body {
   background: linear-gradient(
-    180deg,
-    #e6f3fb 0%,
-    #eaf3f7 18%,
-    #f7f7f3 38%,
-    #e9ecef 60%,
-    #dbe3ea 80%,
-    #d3dde6 100%
+    165deg,
+    #e8eef4 0%,
+    #e2e8f0 25%,
+    #f1f5f9 50%,
+    #e8ecf1 75%,
+    #dce4ed 100%
   );
   background-attachment: fixed;
+  color: #0f172a;
+}
+
+/* 炫酷质感：暗色模式 - 深邃黑 + 微渐变 */
+html.dark body {
+  background: linear-gradient(
+    180deg,
+    #050508 0%,
+    #0a0a0f 20%,
+    #0c0c12 50%,
+    #08080c 100%
+  );
+  background-attachment: fixed;
+  color: #f8fafc;
 }
 
 /* 亮色模式文字颜色强制覆盖 - 修复 Tailwind 4 OKLCH 灰色过淡问题 */
@@ -799,57 +904,133 @@ html:not(.dark) .hover\:bg-slate-50:hover {
   background-color: #f8fafc !important;
 }
 
-/* 动态渐变闪烁背景粒子层（轻量） */
+/* 炫酷动态光晕层 - 仅暗色模式显示，低饱和度 */
 .bg-animated-gradient::before {
   content: '';
   position: fixed;
   inset: 0;
   background:
     radial-gradient(
-      800px 800px at 10% 10%,
-      rgba(99, 102, 241, 0.08),
-      transparent 60%
+      ellipse 90% 80% at 8% 12%,
+      rgba(99, 102, 241, 0.12),
+      transparent 55%
     ),
     radial-gradient(
-      800px 800px at 90% 20%,
-      rgba(16, 185, 129, 0.08),
-      transparent 60%
+      ellipse 80% 70% at 92% 18%,
+      rgba(16, 185, 129, 0.1),
+      transparent 55%
     ),
     radial-gradient(
-      800px 800px at 50% 90%,
+      ellipse 70% 60% at 50% 92%,
       rgba(236, 72, 153, 0.08),
-      transparent 60%
+      transparent 55%
     );
   pointer-events: none;
-  /* 降低动态背景的动画强度，避免强烈高光划过体验 */
-  animation: bgFloat 24s ease-in-out infinite alternate;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+html.dark .bg-animated-gradient::before {
+  opacity: 1;
+  animation: bgFloat 28s ease-in-out infinite alternate;
+}
+html:not(.dark) .bg-animated-gradient::before {
+  background:
+    radial-gradient(
+      ellipse 80% 70% at 15% 15%,
+      rgba(99, 102, 241, 0.06),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 85% 25%,
+      rgba(16, 185, 129, 0.05),
+      transparent 55%
+    );
+  opacity: 1;
+  animation: bgFloat 32s ease-in-out infinite alternate;
 }
 
 @keyframes bgFloat {
   0% {
-    transform: translateY(-10px) scale(1);
+    transform: translateY(-8px) scale(1);
     filter: hue-rotate(0deg);
   }
   100% {
-    transform: translateY(10px) scale(1.02);
-    filter: hue-rotate(20deg);
+    transform: translateY(8px) scale(1.015);
+    filter: hue-rotate(12deg);
   }
 }
 
-/* Card base glassmorphism */
+/* 炫酷玻璃卡片 - 质感毛玻璃 + 内高光 + 柔和阴影 */
 .glass-card {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(20px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 10px 40px -12px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: 1rem;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 16px 48px -16px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
 }
 
 html.dark .glass-card {
-  background: rgba(17, 24, 39, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 40px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+html.dark .glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 20px 56px -16px rgba(0, 0, 0, 0.55),
+    0 0 32px -12px rgba(99, 102, 241, 0.15);
+}
+
+/* 炫酷顶部导航栏 - 毛玻璃 + 内高光 + 微光晕 */
+.navbar-glass {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 4px 24px -4px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.dark .navbar-glass {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 32px -8px rgba(0, 0, 0, 0.45),
+    0 0 24px -8px rgba(99, 102, 241, 0.2);
 }
 
 /* 自定义滚动条样式 */
@@ -871,13 +1052,26 @@ html.dark .glass-card {
   background: rgba(107, 114, 128, 0.5);
 }
 
-/* 视频卡片悬停效果 */
+/* 炫酷视频卡片悬停 - 轻微上浮 + 阴影，无布局偏移 */
 .video-card-hover {
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .video-card-hover:hover {
-  transform: scale(1.05);
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 28px -8px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.dark .video-card-hover:hover {
+  box-shadow:
+    0 16px 36px -8px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 24px -8px rgba(99, 102, 241, 0.15);
+}
+@media (prefers-reduced-motion: reduce) {
+  .video-card-hover:hover {
+    transform: none;
+  }
 }
 
 /* 渐变遮罩 */
@@ -1045,15 +1239,15 @@ div[data-media-provider] video {
   animation-delay: 0.6s;
 }
 
-/* 霓虹灯渐变文字效果增强 */
+/* 霓虹灯渐变文字效果增强 - 青绿赛博风 */
 .neon-gradient-text {
   background: linear-gradient(
     90deg,
-    #00f5ff,
-    #8a2be2,
-    #ff1493,
-    #ffd700,
-    #00f5ff
+    #22c55e,
+    #0ea5e9,
+    #2dd4bf,
+    #a3e635,
+    #22c55e
   );
   background-size: 400% 400%;
   -webkit-background-clip: text;

@@ -13,37 +13,49 @@
 export default function ParticleBackground() {
   return (
     <div className='fixed inset-0 z-[-1] overflow-hidden'>
-      {/* 1. 基础底色 - 深邃黑渐变 (暗色模式) */}
-      <div className='absolute inset-0 bg-linear-to-b from-neutral-950 via-slate-950 to-black dark:from-neutral-950 dark:via-slate-950 dark:to-black' />
-
-      {/* 亮色模式底色 */}
+      {/* 1. 亮色模式底色 */}
       <div className='absolute inset-0 bg-linear-to-b from-slate-100 via-gray-50 to-white dark:opacity-0 transition-opacity duration-500' />
 
-      {/* ========== 统一极光层 (Lite - 全平台通用) ========== */}
-      {/* 紫色光斑 - 左上角，响应式尺寸 */}
+      {/* 暗色模式：炫酷深邃黑底 + 底部渐变 */}
+      <div className='absolute inset-0 opacity-0 dark:opacity-100 bg-[#050508] transition-opacity duration-500' />
+      <div className='absolute inset-0 opacity-0 dark:opacity-100 bg-linear-to-b from-transparent to-black/20 pointer-events-none transition-opacity duration-500' />
+
+      {/* ========== 炫酷极光层 - 青绿 / 青蓝 微光 ========== */}
+      {/* 青绿光斑 - 左上 */}
       <div
-        className='absolute -top-16 -left-16 w-64 h-64 md:w-[40vw] md:h-[40vw] md:max-w-125 md:max-h-125 rounded-full mix-blend-screen filter blur-[50px] md:blur-[80px] animate-blob-slow transform-gpu will-change-transform'
+        className='absolute -top-16 -left-16 w-64 h-64 md:w-[40vw] md:h-[40vw] md:max-w-125 md:max-h-125 rounded-full mix-blend-screen filter blur-[50px] md:blur-[80px] animate-blob-slow transform-gpu will-change-transform dark:opacity-90'
         style={{
           background:
-            'radial-gradient(circle, rgba(139,92,246,0.22) 0%, transparent 70%)',
+            'radial-gradient(circle, rgba(16,185,129,0.3) 0%, transparent 65%)',
           transform: 'translate3d(0,0,0)',
         }}
       />
 
-      {/* 青蓝光斑 - 右下角，响应式尺寸 */}
+      {/* 青蓝光斑 - 右下 */}
       <div
-        className='absolute bottom-20 -right-16 md:bottom-0 md:-right-20 w-56 h-56 md:w-[35vw] md:h-[35vw] md:max-w-md md:max-h-md rounded-full mix-blend-screen filter blur-[45px] md:blur-[70px] animate-blob-slow transform-gpu will-change-transform'
+        className='absolute bottom-20 -right-16 md:bottom-0 md:-right-20 w-56 h-56 md:w-[35vw] md:h-[35vw] md:max-w-md md:max-h-md rounded-full mix-blend-screen filter blur-[45px] md:blur-[70px] animate-blob-slow transform-gpu will-change-transform dark:opacity-90'
         style={{
           background:
-            'radial-gradient(circle, rgba(34,211,238,0.18) 0%, transparent 70%)',
+            'radial-gradient(circle, rgba(34,211,238,0.22) 0%, transparent 65%)',
           transform: 'translate3d(0,0,0)',
           animationDelay: '5s',
         }}
       />
 
-      {/* 3. 噪点纹理层 - 增加质感 */}
+      {/* 青绿环形微光 - 中下，增加层次 */}
       <div
-        className='absolute inset-0 opacity-[0.025] dark:opacity-[0.04] pointer-events-none'
+        className='absolute bottom-0 left-1/2 -translate-x-1/2 w-[60vw] h-64 md:h-[30vw] max-w-2xl rounded-full mix-blend-screen filter blur-[60px] md:blur-[90px] animate-blob-slow transform-gpu will-change-transform opacity-0 dark:opacity-70'
+        style={{
+          background:
+            'radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 72%)',
+          transform: 'translate3d(0,0,0)',
+          animationDelay: '2.5s',
+        }}
+      />
+
+      {/* 噪点纹理层 - 炫酷质感，暗色略强 */}
+      <div
+        className='absolute inset-0 opacity-[0.02] dark:opacity-[0.055] pointer-events-none'
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}

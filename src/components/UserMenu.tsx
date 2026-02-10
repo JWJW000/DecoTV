@@ -21,7 +21,6 @@ import { createPortal } from 'react-dom';
 
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
 import { CURRENT_VERSION } from '@/lib/version';
-import { checkForUpdates, UpdateStatus } from '@/lib/version_check';
 
 import { useDownloadManager } from '@/contexts/DownloadManagerContext';
 
@@ -38,7 +37,6 @@ export const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
-  const [isVersionPanelOpen, setIsVersionPanelOpen] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const [storageType, setStorageType] = useState<string>('localstorage');
   const [mounted, setMounted] = useState(false);
@@ -141,14 +139,6 @@ export const UserMenu: React.FC = () => {
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  // 版本检查相关状态
-  const [updateStatus, setUpdateStatus] = useState<{
-    status: UpdateStatus;
-    currentTimestamp?: string;
-    remoteTimestamp?: string;
-  } | null>(null);
-  const [isChecking, setIsChecking] = useState(true);
-
   // 确保组件已挂载
   useEffect(() => {
     setMounted(true);
@@ -248,22 +238,6 @@ export const UserMenu: React.FC = () => {
         setPlayerBufferMode(savedBufferMode);
       }
     }
-  }, []);
-
-  // 版本检查
-  useEffect(() => {
-    const checkUpdate = async () => {
-      try {
-        const status = await checkForUpdates();
-        setUpdateStatus(status);
-      } catch (error) {
-        console.warn('版本检查失败:', error);
-      } finally {
-        setIsChecking(false);
-      }
-    };
-
-    checkUpdate();
   }, []);
 
   // 点击外部区域关闭下拉框
@@ -651,31 +625,10 @@ export const UserMenu: React.FC = () => {
           {/* 分割线 */}
           <div className='my-1 border-t border-slate-200 dark:border-gray-700'></div>
 
-          {/* 版本信息 */}
-          <button
-            onClick={() => {
-              setIsVersionPanelOpen(true);
-              handleCloseMenu();
-            }}
-            className='w-full px-3 py-2 text-center flex items-center justify-center text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-800/50 transition-colors text-xs'
-          >
-            <div className='flex items-center gap-1'>
-              <span className='font-mono'>v{CURRENT_VERSION}</span>
-              {!isChecking &&
-                updateStatus &&
-                updateStatus.status !== UpdateStatus.FETCH_FAILED && (
-                  <div
-                    className={`w-2 h-2 rounded-full -translate-y-2 ${
-                      updateStatus.status === UpdateStatus.HAS_UPDATE
-                        ? 'bg-yellow-500'
-                        : updateStatus.status === UpdateStatus.NO_UPDATE
-                          ? 'bg-green-400'
-                          : ''
-                    }`}
-                  ></div>
-                )}
-            </div>
-          </button>
+          {/* 版本信息（仅展示当前版本，不再检查更新） */}
+          <div className='w-full px-3 py-2 text-center text-slate-600 dark:text-gray-400 text-xs'>
+            <span className='font-mono'>v{CURRENT_VERSION}</span>
+          </div>
         </div>
       </div>
     </>
@@ -1302,23 +1255,6 @@ export const UserMenu: React.FC = () => {
         >
           <User className='w-full h-full' />
         </button>
-        {/* 版本状态光点指示器 */}
-        {!isChecking && updateStatus && (
-          <span className='absolute top-0 right-0 flex h-2.5 w-2.5'>
-            {updateStatus.status === UpdateStatus.HAS_UPDATE && (
-              <>
-                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75'></span>
-                <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500'></span>
-              </>
-            )}
-            {updateStatus.status === UpdateStatus.NO_UPDATE && (
-              <>
-                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75'></span>
-                <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500'></span>
-              </>
-            )}
-          </span>
-        )}
       </div>
 
       {/* 使用 Portal 将菜单面板渲染到 document.body */}
@@ -1332,11 +1268,6 @@ export const UserMenu: React.FC = () => {
         mounted &&
         createPortal(changePasswordPanel, document.body)}
 
-      {/* 版本面板 */}
-      <VersionPanel
-        isOpen={isVersionPanelOpen}
-        onClose={() => setIsVersionPanelOpen(false)}
-      />
     </>
   );
 };
