@@ -666,7 +666,10 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
               referrerPolicy='no-referrer'
               loading='lazy'
               decoding='async'
-              unoptimized={posterSrc.startsWith('/api/image-proxy')}
+              unoptimized={
+                posterSrc.startsWith('/api/image-proxy') ||
+                posterSrc.includes('doubanio.com')
+              }
               sizes='(max-width: 640px) 33vw, (max-width: 1024px) 20vw, 15vw'
               onLoad={() => setIsLoading(true)}
               onError={(e) => {
