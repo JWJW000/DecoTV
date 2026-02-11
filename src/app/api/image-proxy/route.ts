@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-// OrionTV 兼容接口
+const IMAGE_PROXY_TIMEOUT_MS = 10000; // 10 秒超时，避免慢图拖死
+
+// OrionTV 兼容接口：代理图片解决 HTTPS 下 HTTP 图与防盗链
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const imageUrl = searchParams.get('url');
@@ -11,14 +13,21 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Missing image URL' }, { status: 400 });
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), IMAGE_PROXY_TIMEOUT_MS);
+
   try {
+    const isDouban =
+      imageUrl.includes('doubanio.com') || imageUrl.includes('douban.com');
     const imageResponse = await fetch(imageUrl, {
+      signal: controller.signal,
       headers: {
-        Referer: 'https://movie.douban.com/',
+        ...(isDouban ? { Referer: 'https://movie.douban.com/' } : {}),
         'User-Agent':
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
       },
     });
+    clearTimeout(timeoutId);
 
     if (!imageResponse.ok) {
       return NextResponse.json(
@@ -53,10 +62,12 @@ export async function GET(request: Request) {
       status: 200,
       headers,
     });
-  } catch {
+  } catch (err: unknown) {
+    clearTimeout(timeoutId);
+    const isAbort = err instanceof Error && err.name === 'AbortError';
     return NextResponse.json(
-      { error: 'Error fetching image' },
-      { status: 500 },
+      { error: isAbort ? 'Image fetch timeout' : 'Error fetching image' },
+      { status: isAbort ? 504 : 500 },
     );
   }
 }

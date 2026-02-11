@@ -35,13 +35,11 @@ export function processImageUrl(originalUrl: string): string {
 
   // ========================================
   // 🛡️ 处理 Mixed Content 问题
-  // HTTPS 页面无法加载 HTTP 图片，使用公共代理服务
+  // HTTPS 页面无法加载 HTTP 图片，走自建代理（比国外 wsrv.nl 更快、可控）
   // ========================================
   if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
     if (originalUrl.startsWith('http://')) {
-      // 使用 wsrv.nl 公共图片代理服务（免费、稳定、全球 CDN）
-      // 文档: https://wsrv.nl/
-      return `https://wsrv.nl/?url=${encodeURIComponent(originalUrl)}&default=blank`;
+      return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
     }
   }
 

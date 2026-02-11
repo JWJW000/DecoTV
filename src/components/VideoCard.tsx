@@ -18,6 +18,7 @@ import React, {
   useImperativeHandle,
   useMemo,
   useState,
+  useTransition,
 } from 'react';
 
 import {
@@ -127,6 +128,10 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
 
     const actualTitle = title;
     const actualPoster = poster;
+    const posterSrc = useMemo(
+      () => processImageUrl(actualPoster),
+      [actualPoster],
+    );
     const actualSource = source;
     const actualId = id;
     const actualDoubanId = dynamicDoubanId;
@@ -240,13 +245,13 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
     /**
      * 点击处理器 - 纯净版
      *
-     * 注意：不再手动触发 NProgress，缓存系统足够快
+     * 使用 startTransition 包裹导航，避免阻塞主线程，点击后立即有反馈
      */
+    const [, startTransition] = useTransition();
     const handleClick = useCallback(() => {
       if (origin === 'live' && actualSource && actualId) {
-        // 直播内容跳转到直播页面
         const url = `/live?source=${actualSource.replace('live_', '')}&id=${actualId.replace('live_', '')}`;
-        router.push(url);
+        startTransition(() => router.push(url));
       } else if (
         from === 'douban' ||
         (isAggregate && !actualSource && !actualId)
@@ -254,7 +259,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
         const url = `/play?title=${encodeURIComponent(actualTitle.trim())}${
           actualYear ? `&year=${actualYear}` : ''
         }${actualSearchType ? `&stype=${actualSearchType}` : ''}${isAggregate ? '&prefer=true' : ''}${actualQuery ? `&stitle=${encodeURIComponent(actualQuery.trim())}` : ''}`;
-        router.push(url);
+        startTransition(() => router.push(url));
       } else if (actualSource && actualId) {
         const url = `/play?source=${actualSource}&id=${actualId}&title=${encodeURIComponent(
           actualTitle,
@@ -263,7 +268,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
         }${
           actualQuery ? `&stitle=${encodeURIComponent(actualQuery.trim())}` : ''
         }${actualSearchType ? `&stype=${actualSearchType}` : ''}`;
-        router.push(url);
+        startTransition(() => router.push(url));
       }
     }, [
       origin,
@@ -276,6 +281,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
       isAggregate,
       actualQuery,
       actualSearchType,
+      startTransition,
     ]);
 
     // 新标签页播放处理函数
@@ -653,13 +659,14 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
               - 优化响应式图片加载，避免下载过大图片
             */}
             <Image
-              src={processImageUrl(actualPoster)}
+              src={posterSrc}
               alt={actualTitle}
               fill
               className={origin === 'live' ? 'object-contain' : 'object-cover'}
               referrerPolicy='no-referrer'
               loading='lazy'
               decoding='async'
+              unoptimized={posterSrc.startsWith('/api/image-proxy')}
               sizes='(max-width: 640px) 33vw, (max-width: 1024px) 20vw, 15vw'
               onLoad={() => setIsLoading(true)}
               onError={(e) => {
@@ -717,6 +724,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
                     WebkitTouchCallout: 'none',
+                    touchAction: 'manipulation',
                   } as React.CSSProperties
                 }
                 onContextMenu={(e) => {
@@ -753,6 +761,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
                     WebkitTouchCallout: 'none',
+                    touchAction: 'manipulation',
                   } as React.CSSProperties
                 }
                 onContextMenu={(e) => {
