@@ -2,33 +2,8 @@
 import he from 'he';
 import Hls from 'hls.js';
 
-function getDoubanImageProxyConfig(): {
-  proxyType:
-    | 'direct'
-    | 'server'
-    | 'img3'
-    | 'cmliussss-cdn-tencent'
-    | 'cmliussss-cdn-ali'
-    | 'custom';
-  proxyUrl: string;
-} {
-  const doubanImageProxyType =
-    localStorage.getItem('doubanImageProxyType') ||
-    (window as any).RUNTIME_CONFIG?.DOUBAN_IMAGE_PROXY_TYPE ||
-    'cmliussss-cdn-tencent';
-  const doubanImageProxy =
-    localStorage.getItem('doubanImageProxyUrl') ||
-    (window as any).RUNTIME_CONFIG?.DOUBAN_IMAGE_PROXY ||
-    '';
-  return {
-    proxyType: doubanImageProxyType,
-    proxyUrl: doubanImageProxy,
-  };
-}
-
 /**
- * 处理图片 URL，如果设置了图片代理则使用代理
- * 同时处理 Mixed Content 问题（HTTP 图片在 HTTPS 页面无法显示）
+ * 处理图片 URL：HTTP 图与豆瓣图走自建代理，避免 Mixed Content 与 418
  */
 export function processImageUrl(originalUrl: string): string {
   if (!originalUrl) return originalUrl;
@@ -43,33 +18,14 @@ export function processImageUrl(originalUrl: string): string {
     }
   }
 
-  // 仅处理豆瓣图片代理
-  if (!originalUrl.includes('doubanio.com')) {
-    return originalUrl;
+  // 豆瓣图统一走自建代理，避免 418
+  // 浏览器直连 img3.doubanio.com / CDN 时，若经本地代理(如 127.0.0.1:7890) 或 Referer 异常，豆瓣会返回 418
+  // 由服务端 /api/image-proxy 带正确 Referer 请求豆瓣再返回，可稳定避免 418
+  if (originalUrl.includes('doubanio.com')) {
+    return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
   }
 
-  const { proxyType, proxyUrl } = getDoubanImageProxyConfig();
-  switch (proxyType) {
-    case 'server':
-      return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
-    case 'img3':
-      return originalUrl.replace(/img\d+\.doubanio\.com/g, 'img3.doubanio.com');
-    case 'cmliussss-cdn-tencent':
-      return originalUrl.replace(
-        /img\d+\.doubanio\.com/g,
-        'img.doubanio.cmliussss.net',
-      );
-    case 'cmliussss-cdn-ali':
-      return originalUrl.replace(
-        /img\d+\.doubanio\.com/g,
-        'img.doubanio.cmliussss.com',
-      );
-    case 'custom':
-      return `${proxyUrl}${encodeURIComponent(originalUrl)}`;
-    case 'direct':
-    default:
-      return originalUrl;
-  }
+  return originalUrl;
 }
 
 /**
