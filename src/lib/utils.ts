@@ -3,25 +3,22 @@ import he from 'he';
 import Hls from 'hls.js';
 
 /**
- * 处理图片 URL：HTTP 图与豆瓣图走自建代理，避免 Mixed Content 与 418
+ * 处理图片 URL：所有外链图走自建代理，避免 Mixed Content、418、403 防盗链
  */
 export function processImageUrl(originalUrl: string): string {
   if (!originalUrl) return originalUrl;
 
-  // ========================================
-  // 🛡️ 处理 Mixed Content 问题
-  // HTTPS 页面无法加载 HTTP 图片，走自建代理（比国外 wsrv.nl 更快、可控）
-  // ========================================
-  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-    if (originalUrl.startsWith('http://')) {
-      return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
-    }
-  }
+  // 站内路径不代理
+  if (originalUrl.startsWith('/')) return originalUrl;
 
-  // 豆瓣图统一走自建代理，避免 418
-  // 浏览器直连 img3.doubanio.com / CDN 时，若经本地代理(如 127.0.0.1:7890) 或 Referer 异常，豆瓣会返回 418
-  // 由服务端 /api/image-proxy 带正确 Referer 请求豆瓣再返回，可稳定避免 418
-  if (originalUrl.includes('doubanio.com')) {
+  // 所有外链（http/https）统一走自建代理，避免：
+  // - HTTP 图在 HTTPS 下 Mixed Content
+  // - 豆瓣 418（直连/代理环境被拒）
+  // - 资源站图 403（_next/image 或直连触发防盗链）
+  if (
+    originalUrl.startsWith('http://') ||
+    originalUrl.startsWith('https://')
+  ) {
     return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
   }
 

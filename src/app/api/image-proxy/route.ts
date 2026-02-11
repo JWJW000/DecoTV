@@ -19,10 +19,22 @@ export async function GET(request: Request) {
   try {
     const isDouban =
       imageUrl.includes('doubanio.com') || imageUrl.includes('douban.com');
+    // 豆瓣必须带豆瓣 Referer；其他站带图片所在域名的 Origin，减少 403 防盗链
+    let referer: string | undefined;
+    if (isDouban) {
+      referer = 'https://movie.douban.com/';
+    } else {
+      try {
+        const u = new URL(imageUrl);
+        referer = `${u.protocol}//${u.host}/`;
+      } catch {
+        referer = undefined;
+      }
+    }
     const imageResponse = await fetch(imageUrl, {
       signal: controller.signal,
       headers: {
-        ...(isDouban ? { Referer: 'https://movie.douban.com/' } : {}),
+        ...(referer ? { Referer: referer } : {}),
         'User-Agent':
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
       },
